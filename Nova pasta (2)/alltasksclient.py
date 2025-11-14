@@ -12,27 +12,6 @@ def conectar_banco():
         database="MegaSistemInformaticabd"
     )
 
-# Função para verificar o login do usuário
-def login_usuario(nome_usuario, senha):
-    conn = conectar_banco()
-    cursor = conn.cursor()
-
-    cursor.execute("SELECT id, nome_usuario, senha, cargo FROM usuarios WHERE nome_usuario = %s", (nome_usuario,))
-    resultado = cursor.fetchone()
-
-    if resultado is None:
-        return False, None, None
-
-    id_usuario = resultado[0]
-    nome_usuario_bd = resultado[1]
-    senha_hash = resultado[2]
-    cargo = resultado[3]
-
-    if bcrypt.checkpw(senha.encode('utf-8'), senha_hash.encode('utf-8')):
-        return True, id_usuario, nome_usuario_bd, cargo
-    else:
-        return False, None, None
-
 # Função para criar o ticket no banco de dados
 def criar_ticket(id, nome_usuario, titulo, descrição, tipo):
     conn = conectar_banco()
@@ -42,7 +21,7 @@ def criar_ticket(id, nome_usuario, titulo, descrição, tipo):
     data_criação = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     # Inserir o ticket na tabela "tickets"
-    cursor.execute("""
+    cursor.execute(""" 
         INSERT INTO tickets (id, nome_usuario, titulo, descrição, tipo, data_criação, status)
         VALUES (%s, %s, %s, %s, %s, %s, 'Pendente')
     """, (id, nome_usuario, titulo, descrição, tipo, data_criação))
@@ -96,41 +75,6 @@ def formulario(id, nome_usuario):
 
     root.mainloop()
 
-# Função para realizar o login
-def tentar_login():
-    nome_usuario = entry_usuario.get()
-    senha = entry_senha.get()
-
-    sucesso, id_usuario, nome_usuario_bd, cargo = login_usuario(nome_usuario, senha)
-
-    if sucesso:
-        resultado_label.config(text="Login bem-sucedido!", fg="green")
-        root.quit()  # Fecha a janela de login após login bem-sucedido
-        formulario(id_usuario, nome_usuario_bd)  # Chama a função para criar o ticket
-    else:
-        resultado_label.config(text="Usuário ou senha incorretos.", fg="red")
-
-# Interface de Login
-root = tk.Tk()
-root.title("Tela de Login")
-root.geometry("300x200")
-
-label_usuario = tk.Label(root, text="Nome de Usuário:")
-label_usuario.pack(pady=5)
-
-entry_usuario = tk.Entry(root)
-entry_usuario.pack(pady=5)
-
-label_senha = tk.Label(root, text="Senha:")
-label_senha.pack(pady=5)
-
-entry_senha = tk.Entry(root, show="*")
-entry_senha.pack(pady=5)
-
-login_button = tk.Button(root, text="Login", command=tentar_login)
-login_button.pack(pady=10)
-
-resultado_label = tk.Label(root, text="")
-resultado_label.pack(pady=5)
-
-root.mainloop()
+# Função para iniciar o programa do cliente
+def iniciar_programa(id_usuario, nome_usuario):
+    formulario(id_usuario, nome_usuario)
