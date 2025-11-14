@@ -1,5 +1,6 @@
 import pymysql
 import bcrypt
+import subprocess
 
 conn = pymysql.connect(
     host="localhost",
@@ -20,6 +21,8 @@ def cadastrar_usuario(nome_usuario, senha):
     """, (nome_usuario, senha_hash))
     conn.commit()
     print("Usuário cadastrado com sucesso!")
+
+    
 
 while True:
     nome_usuario = input("Digite seu nome de usuário: ")
