@@ -70,6 +70,6 @@ def exibir_tabela_tickets():
     # Iniciar a interface gráfica
     root.mainloop()
 
-# Chamar a função para exibir a tabela de tickets
-def iniciar_programa(nome_usuario):
+# Função para iniciar o programa do funcionário
+def iniciar_programa(id_usuario, nome_usuario):
     exibir_tabela_tickets()
