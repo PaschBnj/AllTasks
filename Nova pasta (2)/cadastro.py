@@ -36,5 +36,3 @@ while True:
 
 cursor.close()
 conn.close()
-
-aaaaa
