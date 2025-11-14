@@ -1,38 +1,66 @@
+import tkinter as tk
 import pymysql
 import bcrypt
+import AllTasksfuncionarios
+import alltasksclient
 
-conn = pymysql.connect(
-    host="localhost",
-    user="root",
-    password="1357924680aA.",
-    database="MegaSistemInformaticabd"    
-)
-
-cursor = conn.cursor()
+def conectar_banco():
+    return pymysql.connect(
+        host="localhost",
+        user="root",
+        password="1357924680aA.",
+        database="MegaSistemInformaticabd"
+    )
 
 def login_usuario(nome_usuario, senha):
-    cursor.execute("SELECT senha FROM usuarios WHERE nome_usuario = %s", (nome_usuario,))
+    conn = conectar_banco()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, nome_usuario, senha, cargo FROM usuarios WHERE nome_usuario = %s", (nome_usuario,))
     resultado = cursor.fetchone()
-    
+    conn.close()
     if resultado is None:
-        print("Usuário não encontrado.")
-        return False
-    
-    senha_hash = resultado[0]
-    
-    if bcrypt.checkpw(senha.encode('utf-8'), senha_hash.encode('utf-8')):
-        print("Login bem-sucedido!")
-        return True
+        return False, "Usuário não encontrado.", None, None
+    id_usuario, nome_usuario_db, senha_hash, cargo = resultado
+    if isinstance(senha_hash, bytes):
+        senha_valida = bcrypt.checkpw(senha.encode('utf-8'), senha_hash)
     else:
-        print("Senha incorreta.")
-        return False
+        senha_valida = bcrypt.checkpw(senha.encode('utf-8'), senha_hash.encode('utf-8'))
+    if senha_valida:
+        return True, "Login bem-sucedido!", id_usuario, cargo
+    else:
+        return False, "Senha incorreta.", None, None
 
-while True:
-    nome_usuario = input("Digite seu nome de usuário: ")
-    senha = input("Digite sua senha: ")
-    
-    if login_usuario(nome_usuario, senha):
-        break  # Sai do loop se o login for bem-sucedido
+def tentar_login():
+    nome_usuario = entry_usuario.get()
+    senha = entry_senha.get()
+    sucesso, mensagem, id_usuario, cargo = login_usuario(nome_usuario, senha)
+    resultado_label.config(text=mensagem, fg="green" if sucesso else "red")
+    if sucesso:
+        if cargo == "cliente":
+            alltasksclient.iniciar_programa(nome_usuario)
+        else:
+            AllTasksfuncionarios.iniciar_programa(nome_usuario)
+# Criando a janela de login apenas uma vez
+root = tk.Tk()
+root.title("Tela de Login")
+root.geometry("300x200")
 
-cursor.close()
-conn.close()
+label_usuario = tk.Label(root, text="Nome de Usuário:")
+label_usuario.pack(pady=5)
+
+entry_usuario = tk.Entry(root)
+entry_usuario.pack(pady=5)
+
+label_senha = tk.Label(root, text="Senha:")
+label_senha.pack(pady=5)
+
+entry_senha = tk.Entry(root, show="*")
+entry_senha.pack(pady=5)
+
+login_button = tk.Button(root, text="Login", command=tentar_login)
+login_button.pack(pady=10)
+
+resultado_label = tk.Label(root, text="")
+resultado_label.pack(pady=5)
+
+root.mainloop()
