@@ -1,9 +1,8 @@
 import pymysql
 import tkinter as tk
 from datetime import datetime
-import bcrypt
 
-# Função para conectar ao banco de dados
+# Conexão com o banco
 def conectar_banco():
     return pymysql.connect(
         host="localhost",
@@ -12,69 +11,55 @@ def conectar_banco():
         database="MegaSistemInformaticabd"
     )
 
-# Função para criar o ticket no banco de dados
-def criar_ticket(id, nome_usuario, titulo, descrição, tipo):
+# Função para criar ticket com número de telefone
+def criar_ticket(id_usuario, nome_usuario, numero_telefone, titulo, descricao, tipo):
     conn = conectar_banco()
     cursor = conn.cursor()
 
-    # Pegando a data e hora atuais
-    data_criação = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    data_criacao = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-    # Inserir o ticket na tabela "tickets"
     cursor.execute(""" 
-        INSERT INTO tickets (id, nome_usuario, titulo, descrição, tipo, data_criação, status)
-        VALUES (%s, %s, %s, %s, %s, %s, 'Pendente')
-    """, (id, nome_usuario, titulo, descrição, tipo, data_criação))
+        INSERT INTO tickets (id, nome_usuario, numero_telefone, titulo, descrição, tipo, data_criação, status)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, 'Pendente')
+    """, (id_usuario, nome_usuario, numero_telefone, titulo, descricao, tipo, data_criacao))
 
-    conn.commit()  # Confirma a inserção
+    conn.commit()
     conn.close()
 
-# Função para mostrar o formulário e criar o ticket
-def formulario(id, nome_usuario):
+# Formulário para criar ticket
+def formulario(id_usuario, nome_usuario, numero_telefone):
     def enviar_ticket():
         titulo = entry_ticket_titulo.get()
-        descrição = text_ticket_descrição.get("1.0", tk.END)
+        descricao = text_ticket_descricao.get("1.0", tk.END)
         tipo = combo_tipo.get()
 
-        # Chama a função para criar o ticket no banco de dados
-        criar_ticket(id, nome_usuario, titulo, descrição, tipo)
-
+        criar_ticket(id_usuario, nome_usuario, numero_telefone, titulo, descricao, tipo)
         label_resultado.config(text="Ticket criado com sucesso!", fg="green")
 
-    # Criação da interface gráfica para o formulário
     root = tk.Tk()
     root.title("Criar Ticket")
     root.geometry("600x400")
 
-    label_ticket_titulo = tk.Label(root, text="Título do Ticket:")
-    label_ticket_titulo.pack(pady=5)
-
+    tk.Label(root, text="Título do Ticket:").pack(pady=5)
     entry_ticket_titulo = tk.Entry(root, width=50)
     entry_ticket_titulo.pack(pady=5)
 
-    label_ticket_descrição = tk.Label(root, text="Descrição do Ticket:")
-    label_ticket_descrição.pack(pady=5)
+    tk.Label(root, text="Descrição do Ticket:").pack(pady=5)
+    text_ticket_descricao = tk.Text(root, height=10, width=50)
+    text_ticket_descricao.pack(pady=5)
 
-    text_ticket_descrição = tk.Text(root, height=10, width=50)
-    text_ticket_descrição.pack(pady=5)
-
-    label_ticket_tipo = tk.Label(root, text="Tipo de Problema:")
-    label_ticket_tipo.pack(pady=5)
-
-    combo_tipo = tk.StringVar()
-    combo_tipo.set("Bug")  # Default
+    tk.Label(root, text="Tipo de Problema:").pack(pady=5)
+    combo_tipo = tk.StringVar(value="Bug")
     tipo_options = ["Bug", "Informação errada", "Adicionar/Remover produtos/grupos/menus", "Problema fiscal", "Outros"]
-    dropdown_tipo = tk.OptionMenu(root, combo_tipo, *tipo_options)
-    dropdown_tipo.pack(pady=5)
+    tk.OptionMenu(root, combo_tipo, *tipo_options).pack(pady=5)
 
-    botao_enviar = tk.Button(root, text="Enviar Ticket", command=enviar_ticket)
-    botao_enviar.pack(pady=10)
-
-    label_resultado = tk.Label(root, text="")  # Label para resultado
+    tk.Button(root, text="Enviar Ticket", command=enviar_ticket).pack(pady=10)
+    label_resultado = tk.Label(root, text="")
     label_resultado.pack(pady=5)
 
     root.mainloop()
 
-# Função para iniciar o programa do cliente
-def iniciar_programa(id_usuario, nome_usuario):
-    formulario(id_usuario, nome_usuario)
+# Função principal do cliente
+def iniciar_programa(id_usuario, nome_usuario, numero_telefone):
+    print(f"Cliente {nome_usuario} ({id_usuario}), Telefone: {numero_telefone}")
+    formulario(id_usuario, nome_usuario, numero_telefone)
