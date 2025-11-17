@@ -27,6 +27,7 @@ CREATE TABLE `usuarios` (
   `nome_usuario` varchar(50) NOT NULL,
   `senha` varchar(255) NOT NULL,
   `cargo` varchar(50) DEFAULT NULL,
+  `numero_telefone` varchar(50) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nome_usuario` (`nome_usuario`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -38,7 +39,7 @@ CREATE TABLE `usuarios` (
 
 LOCK TABLES `usuarios` WRITE;
 /*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
-INSERT INTO `usuarios` VALUES (1,'USER_TESTE','$2b$12$TygvWcd2CWNF2uSWJw8MlOOJHU.0Vo174l.DmiI0k3VPyz1xmkwYm','funcionario'),(2,'USER_TESTE2','$2b$12$Afjdk4.9SgqAAwjDuS.nl.XNKHedRUheiZ/dq6t/cFuXLLtv0Df5a','cliente');
+INSERT INTO `usuarios` VALUES (1,'USER_TESTE','$2b$12$TygvWcd2CWNF2uSWJw8MlOOJHU.0Vo174l.DmiI0k3VPyz1xmkwYm','funcionario','17997464512'),(2,'USER_TESTE2','$2b$12$Afjdk4.9SgqAAwjDuS.nl.XNKHedRUheiZ/dq6t/cFuXLLtv0Df5a','cliente','17997464512');
 /*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -52,3 +53,4 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2025-11-14 17:37:36
+
