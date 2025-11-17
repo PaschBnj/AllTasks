@@ -3,6 +3,8 @@ import pymysql
 import bcrypt
 import AllTasksfuncionarios
 import alltasksclient
+from tkinter import PhotoImage
+
 
 # Função para conectar ao banco de dados
 def conectar_banco():
@@ -53,9 +55,9 @@ def tentar_login():
         
         # Passando número de telefone junto com os outros argumentos
         if cargo == "cliente":
-            alltasksclient.iniciar_programa(id_usuario, nome_usuario, numero_telefone)  
+            alltasksclient.iniciar_programa(id_usuario, nome_usuario, numero_telefone) 
         else:
-            AllTasksfuncionarios.iniciar_programa(id_usuario, nome_usuario, numero_telefone)  
+            AllTasksfuncionarios.iniciar_programa(id_usuario, nome_usuario, numero_telefone)
 
 # Criação da janela de login
 root = tk.Tk()
