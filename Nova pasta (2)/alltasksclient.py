@@ -36,6 +36,7 @@ def formulario(id_usuario, nome_usuario, numero_telefone):
         criar_ticket(id_usuario, nome_usuario, numero_telefone, titulo, descricao, tipo)
         label_resultado.config(text="Ticket criado com sucesso!", fg="green")
 
+
     root = tk.Tk()
     root.title("Criar Ticket")
     root.geometry("600x400")
