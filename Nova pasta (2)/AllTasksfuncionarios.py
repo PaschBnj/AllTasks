@@ -132,7 +132,8 @@ def exibir_tabela_tickets():
     for col in columns:
         tree.heading(col, text=col)
         tree.column(col, width=100, anchor="center")
-    tree.pack(pady=20)
+    tree.pack(pady=20, fill=tk.BOTH, expand=True)
+
 
     # Detalhes do ticket em janela separada
     def exibir_detalhes_ticket(ticket):
