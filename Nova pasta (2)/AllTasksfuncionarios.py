@@ -190,7 +190,7 @@ def exibir_tabela_tickets():
             tree.delete(item)
         for ticket in tickets:
             tree.insert("", tk.END, values=ticket)
-        root.after(1000, atualizar_tabela) # Chama novamente em 5s
+        root.after(1000, atualizar_tabela) # Chama novamente em 1s
 
     atualizar_tabela()
     root.mainloop()
